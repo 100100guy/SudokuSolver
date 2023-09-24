@@ -75,13 +75,19 @@ def empty_field(bo):
     return None
 def print_board(bo):
     for row in range(len(bo)):
+
         if row % 3 == 0 :
             print("- - - - - - - - - - - - - ")
+
         for col in range(len(bo[0])):
+
             if col % 3 == 0 :
                 print("| ", end="")
+
             print(bo[row][col], end=" ")
+
         print("|")
+
     print("- - - - - - - - - - - - - ")
 
 print_board(board)
@@ -108,6 +114,7 @@ for i in range(9):
     for j in range(9):
         labels[i][j] = tk.Button(root, text="", width=6, height=3,font=("Helvetica", 12), bg="white")
         labels[i][j].grid(row=i, column=j)
+        
 def solve_sudoku():
     solve(board)
     update_board()
