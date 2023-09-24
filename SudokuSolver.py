@@ -37,8 +37,6 @@ def solve(bo):
             bo[r][c] = num
             # print_board(bo)
             # print()
-            update_board()
-
             if solve(bo):
                 return True
 
