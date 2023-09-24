@@ -1,29 +1,33 @@
 import tkinter as tk
+import random
+import copy
 from tkinter import ttk  # Import the ttk module
 
-init_board = [
-    [7, 8, 0, 4, 0, 0, 1, 2, 0],
-    [6, 0, 0, 0, 7, 5, 0, 0, 9],
-    [0, 0, 0, 6, 0, 1, 0, 7, 8],
-    [0, 0, 7, 0, 4, 0, 2, 6, 0],
-    [0, 0, 1, 0, 5, 0, 9, 3, 0],
-    [9, 0, 4, 0, 6, 0, 0, 0, 5],
-    [0, 7, 0, 3, 0, 0, 0, 1, 2],
-    [1, 2, 0, 0, 0, 7, 4, 0, 0],
-    [0, 4, 9, 2, 0, 6, 0, 0, 7],
-]
+init_board = [[0 for _ in range(9)] for _ in range(9)]
 
-board = [
-    [7, 8, 0, 4, 0, 0, 1, 2, 0],
-    [6, 0, 0, 0, 7, 5, 0, 0, 9],
-    [0, 0, 0, 6, 0, 1, 0, 7, 8],
-    [0, 0, 7, 0, 4, 0, 2, 6, 0],
-    [0, 0, 1, 0, 5, 0, 9, 3, 0],
-    [9, 0, 4, 0, 6, 0, 0, 0, 5],
-    [0, 7, 0, 3, 0, 0, 0, 1, 2],
-    [1, 2, 0, 0, 0, 7, 4, 0, 0],
-    [0, 4, 9, 2, 0, 6, 0, 0, 7],
-]
+board = [[0 for _ in range(9)] for _ in range(9)]
+
+
+def generate_sudoku():
+    # Fill diagonal subgrids
+    fill_diagonal_subgrid(board)
+    # Solve the Sudoku
+    solve(board)
+    # Adjust the number of empty cells as needed
+    empty_cells = random.sample(range(81), 45)
+
+    for cell in empty_cells:
+        row, col = divmod(cell, 9)
+        board[row][col] = 0
+
+
+def fill_diagonal_subgrid(board):
+    for k in range(0, 9, 3):
+        nums = list(range(1, 10))
+        random.shuffle(nums)
+        for i in range(3):
+            for j in range(3):
+                board[k + i][k + j] = nums.pop()
 
 
 def solve(bo):
@@ -37,6 +41,7 @@ def solve(bo):
             bo[r][c] = num
             # print_board(bo)
             # print()
+
             if solve(bo):
                 return True
 
@@ -60,8 +65,8 @@ def is_valid_move(bo, row, col, num):
     box_x = col // 3
     box_y = row // 3
 
-    for i in range(3 * box_y, 3 * box_y + 3):
-        for j in range(3 * box_x, 3 * box_x + 3):
+    for i in range(3*box_y, 3*box_y+3):
+        for j in range(3*box_x, 3*box_x+3):
             if bo[i][j] == num and i != row and j != col:
                 return False
 
@@ -80,19 +85,18 @@ def print_board(bo):
     for row in range(len(bo)):
         if row % 3 == 0:
             print("- - - - - - - - - - - - - ")
-
         for col in range(len(bo[0])):
             if col % 3 == 0:
                 print("| ", end="")
-
             print(bo[row][col], end=" ")
-
         print("|")
-
     print("- - - - - - - - - - - - - ")
 
 
+generate_sudoku()
 print_board(board)
+init_board = copy.deepcopy(board)
+print_board(init_board)
 
 # Create a tkinter window
 root = tk.Tk()
@@ -116,8 +120,7 @@ labels = [[None for _ in range(9)] for _ in range(9)]
 for i in range(9):
     for j in range(9):
         labels[i][j] = tk.Button(
-            root, text="", width=6, height=3, font=("Helvetica", 12), bg="white"
-        )
+            root, text="", width=6, height=3, font=("Helvetica", 12), bg="white")
         labels[i][j].grid(row=i, column=j)
 
 
